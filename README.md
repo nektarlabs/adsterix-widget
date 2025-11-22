@@ -30,7 +30,7 @@ function App() {
 
 ## Getting a Cast Hash
 
-To display an ad, you need a cast hash from an Adsterix ad. Follow these steps:
+To display an ad, you need a cast hash of the corresponding Farcaster cast. Follow these steps:
 
 1. Create an ad using the Adsterix miniapp: [https://farcaster.xyz/miniapps/nOlHtdHWXJ6H/adsterix](https://farcaster.xyz/miniapps/nOlHtdHWXJ6H/adsterix)
 2. Navigate to your ad's cast on Farcaster
@@ -43,7 +43,6 @@ To display an ad, you need a cast hash from an Adsterix ad. Follow these steps:
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `castHash` | `string` | — | The Farcaster cast hash of the ad to display |
-| `buySlotUrl` | `string` | `"https://adsterix.xyz/buy"` | URL to redirect users who want to buy an ad slot |
 | `onClose` | `() => void` | — | Callback fired when the user closes the ad |
 
 ## Examples
