@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.1...v1.0.2) (2025-11-23)
+
+
+### Bug Fixes
+
+* build package before publishing ([9a3a99a](https://github.com/nektarlabs/adsterix-widget/commit/9a3a99ad0a4633889d2d36a3dde832b248cf8bb8))
+
 ## [1.0.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.0...v1.0.1) (2025-11-23)
 
 
