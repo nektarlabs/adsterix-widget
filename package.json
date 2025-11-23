@@ -43,7 +43,6 @@
     "lucide-react": "^0.554.0"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
