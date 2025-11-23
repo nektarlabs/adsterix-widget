@@ -58,6 +58,12 @@ To display an ad, you need a cast hash of the corresponding Farcaster cast. Foll
 | `castHash` | `string`     | —       | The Farcaster cast hash of the ad to display |
 | `onClose`  | `() => void` | —       | Callback fired when the user closes the ad   |
 
+## Example
+
+<p align="center">
+  <img src="./resources/miniapp.png" alt="Miniapp"/>
+</p>
+
 ## License
 
 MIT © [Nektar Labs](https://nektarlabs.com)
