@@ -1,7 +1,5 @@
 # @nektarlabs/adsterix-widget
 
-Got it, adjusted to use the comma:
-
 A React component that lets you embed Adsterix ads anywhere in your app.
 
 Adsterix is a platform that lets creators monetize their visibility on Farcaster, built on Base (the chain for
