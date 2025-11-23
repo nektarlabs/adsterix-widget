@@ -61,7 +61,7 @@ To display an ad, you need a cast hash of the corresponding Farcaster cast. Foll
 ## Example
 
 <p align="center">
-  <img src="./resources/miniapp.png" alt="Miniapp"/>
+  <img src="./resources/miniapp.png" alt="Miniapp" width="300"/>
 </p>
 
 ## License
