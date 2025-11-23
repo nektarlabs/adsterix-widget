@@ -16,22 +16,30 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
     "clean": "rm -rf dist",
-    "format": "prettier --config ./.prettierrc --write \"./**/*.{ts,tsx,json,md}\""
+    "dev": "tsup --watch",
+    "format": "prettier --config ./.prettierrc --write \"./**/*.{ts,tsx,json,md}\"",
+    "semantic-release": "semantic-release"
   },
   "peerDependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "semantic-release": "^25.0.2",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.554.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
