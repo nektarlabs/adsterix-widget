@@ -17,14 +17,15 @@ const CtaButton: React.FC<{
   label: string
   icon: React.ReactNode
   onClick: (e: React.MouseEvent) => void
-}> = ({ label, icon, onClick }) => (
+  showLabel: boolean
+}> = ({ label, icon, onClick, showLabel }) => (
   <motion.div
     onClick={onClick}
     style={{
       display: "flex",
       alignItems: "center",
-      gap: 6,
-      padding: "8px 14px",
+      gap: showLabel ? 6 : 0,
+      padding: showLabel ? "8px 14px" : "8px",
       borderRadius: 20,
       background: "rgba(255,255,255,0.9)",
       backdropFilter: "blur(8px)",
@@ -42,10 +43,10 @@ const CtaButton: React.FC<{
     }}
     transition={{ type: "spring", stiffness: 400, damping: 15 }}
   >
-    {label}
+    {showLabel && label}
     <motion.span
       style={{ display: "flex", alignItems: "center" }}
-      whileHover={{ x: 2 }}
+      whileHover={{ x: showLabel ? 2 : 0 }}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
     >
       {icon}
@@ -59,6 +60,8 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
   const [loading, setLoading] = React.useState(false)
   const [imageLoaded, setImageLoaded] = React.useState(false)
   const [visible, setVisible] = React.useState(true)
+  const [isSmall, setIsSmall] = React.useState(true) // Start with true to avoid flash
+  const containerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     if (!castHash) return
@@ -68,7 +71,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
       setError(null)
 
       try {
-        const response = await fetch(`https://adsterix.xyz/api/ads/cta-details/${castHash}`)
+        const response = await fetch(`https://www.adsterix.xyz/api/ads/cta-details/${castHash}`)
 
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.status}`)
@@ -85,6 +88,28 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
 
     fetchCtaDetails()
   }, [castHash])
+
+  React.useEffect(() => {
+    if (!containerRef.current) return
+
+    const checkSize = (entries: ResizeObserverEntry[]) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width
+        setIsSmall(width < 270)
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(checkSize)
+    resizeObserver.observe(containerRef.current)
+
+    // Initial check
+    if (containerRef.current) {
+      const width = containerRef.current.offsetWidth
+      setIsSmall(width < 400)
+    }
+
+    return () => resizeObserver.disconnect()
+  }, [loading, ctaDetails]) // Re-run when content changes
 
   const handleAdClick = () => {
     if (ctaDetails?.url) {
@@ -131,6 +156,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
   if (loading || !ctaDetails) {
     return (
       <div
+        ref={containerRef}
         style={{
           position: "relative",
           width: "100%",
@@ -155,6 +181,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
 
   return (
     <motion.div
+      ref={containerRef}
       onClick={handleAdClick}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -243,7 +270,12 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
           gap: 8,
         }}
       >
-        <CtaButton label="Buy Slot" icon={<ShoppingBag size={14} strokeWidth={2.5} />} onClick={handleBuySlotClick} />
+        <CtaButton
+          label="Buy Slot"
+          icon={<ShoppingBag size={14} strokeWidth={2.5} />}
+          onClick={handleBuySlotClick}
+          showLabel={!isSmall}
+        />
         <CtaButton
           label="Learn More"
           icon={<ExternalLink size={14} strokeWidth={2.5} />}
@@ -251,6 +283,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
             e.stopPropagation()
             handleAdClick()
           }}
+          showLabel={!isSmall}
         />
       </div>
 
