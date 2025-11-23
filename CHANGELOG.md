@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.2...v1.1.0) (2025-11-23)
+
+
+### Features
+
+* **AdsterixWidget.tsx:** adds width and height as optional parameters ([e416d9d](https://github.com/nektarlabs/adsterix-widget/commit/e416d9d334e60656cfb127c13388afef0089110d))
+
 ## [1.0.2](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.1...v1.0.2) (2025-11-23)
 
 
