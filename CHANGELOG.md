@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.0...v1.0.1) (2025-11-23)
+
+
+### Bug Fixes
+
+* updates workflow for provenance support ([ced8242](https://github.com/nektarlabs/adsterix-widget/commit/ced8242033e3f90a6703400b19e9ec6282efbb56))
+
 # 1.0.0 (2025-11-23)
 
 
