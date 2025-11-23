@@ -58,14 +58,6 @@ To display an ad, you need a cast hash of the corresponding Farcaster cast. Foll
 | `castHash` | `string`     | —       | The Farcaster cast hash of the ad to display |
 | `onClose`  | `() => void` | —       | Callback fired when the user closes the ad   |
 
-## Examples
-
-### Basic Usage
-
-```tsx
-<AdsterixWidget castHash="0xbf59074b94c5fd1c6b3ee1a7201708da3f60998f" />
-```
-
 ## License
 
 MIT © [Nektar Labs](https://nektarlabs.com)
