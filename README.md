@@ -53,10 +53,12 @@ To display an ad, you need a cast hash of the corresponding Farcaster cast. Foll
 
 ## Props
 
-| Prop       | Type         | Default | Description                                  |
-| ---------- | ------------ | ------- | -------------------------------------------- |
-| `castHash` | `string`     | —       | The Farcaster cast hash of the ad to display |
-| `onClose`  | `() => void` | —       | Callback fired when the user closes the ad   |
+| Prop       | Type               | Default  | Description                                                                      |
+| ---------- | ------------------ | -------- | -------------------------------------------------------------------------------- |
+| `castHash` | `string`           | —        | The Farcaster cast hash of the ad to display                                     |
+| `onClose`  | `() => void`       | —        | Callback fired when the user closes the ad                                       |
+| `width`    | `string \| number` | `"100%"` | Width of the widget (px or string)                                               |
+| `height`   | `string \| number` | —        | Height of the widget (px or string). If not provided, maintains 3:2 aspect ratio |
 
 ## Example
 

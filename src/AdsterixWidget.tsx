@@ -5,6 +5,8 @@ import { ExternalLink, Sparkles, ShoppingBag, X } from "lucide-react"
 export interface AdsterixWidgetProps {
   castHash?: string
   onClose?: () => void
+  width?: string | number
+  height?: string | number
 }
 
 interface CtaDetails {
@@ -54,7 +56,7 @@ const CtaButton: React.FC<{
   </motion.div>
 )
 
-export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClose }) => {
+export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClose, width = "100%", height }) => {
   const [ctaDetails, setCtaDetails] = React.useState<CtaDetails | null>(null)
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
@@ -128,6 +130,14 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
     onClose?.()
   }
 
+  const containerStyle: React.CSSProperties = {
+    position: "relative",
+    width: typeof width === "number" ? `${width}px` : width,
+    ...(height ? { height: typeof height === "number" ? `${height}px` : height } : { aspectRatio: "3 / 2" }),
+    borderRadius: 12,
+    overflow: "hidden",
+  }
+
   if (!visible) return null
 
   if (error) {
@@ -136,11 +146,11 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
+          ...containerStyle,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           padding: 16,
-          borderRadius: 12,
           background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
           color: "#f87171",
           fontSize: 14,
@@ -158,12 +168,8 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
       <div
         ref={containerRef}
         style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "3 / 2",
-          borderRadius: 12,
+          ...containerStyle,
           background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
-          overflow: "hidden",
         }}
       >
         <motion.div
@@ -190,11 +196,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       style={{
-        position: "relative",
-        width: "100%",
-        aspectRatio: "3 / 2",
-        borderRadius: 12,
-        overflow: "hidden",
+        ...containerStyle,
         cursor: "pointer",
         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
       }}
