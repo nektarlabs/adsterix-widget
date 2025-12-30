@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.2.0...v1.3.0) (2025-12-30)
+
+
+### Features
+
+* forces new release ([00d8bce](https://github.com/nektarlabs/adsterix-widget/commit/00d8bce6a28b37e208b32bf77ed79c44a22873a2))
+
 # [1.2.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.1.0...v1.2.0) (2025-12-30)
 
 ### Features
