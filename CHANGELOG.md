@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.1...v1.3.2) (2025-12-30)
+
+
+### Bug Fixes
+
+* update npm token configuration ([4d6bc1d](https://github.com/nektarlabs/adsterix-widget/commit/4d6bc1da48367fd97dac19beff91ffcd0541eac3))
+
 ## [1.3.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.0...v1.3.1) (2025-12-30)
 
 
