@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.1.0...v1.2.0) (2025-12-30)
+
+
+### Features
+
+* adds possibility to customize the ad ([9d62de4](https://github.com/nektarlabs/adsterix-widget/commit/9d62de4d54f6287758c902f06c1a828f755b455a))
+
 # [1.1.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.0.2...v1.1.0) (2025-11-23)
 
 
