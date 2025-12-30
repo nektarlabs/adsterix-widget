@@ -2,11 +2,41 @@ import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ExternalLink, Sparkles, ShoppingBag, X } from "lucide-react"
 
+type CtaPosition =
+  | "bottom-left"
+  | "bottom-right"
+  | "top-left"
+  | "top-right"
+  | "bottom-center"
+  | "top-center"
+  | "center-left"
+  | "center-right"
+
 export interface AdsterixWidgetProps {
   castHash?: string
   onClose?: () => void
   width?: string | number
   height?: string | number
+  showAdSparkleLabel?: boolean
+  showCloseButton?: boolean
+  showBuySlotButton?: boolean
+  showCtaButton?: boolean
+  showCtaButtonIcon?: boolean
+  ctaButtonText?: string
+  onBuySlotClick?: (buySlotUrl: string) => void
+  onAdClick?: (url: string) => void
+  position?: CtaPosition
+  containerStyle?: React.CSSProperties
+  buySlotButtonStyle?: React.CSSProperties
+  ctaButtonStyle?: React.CSSProperties
+}
+
+interface CtaButtonProps {
+  label: string
+  icon: React.ReactNode
+  onClick: (e: React.MouseEvent) => void
+  showLabel: boolean
+  style?: React.CSSProperties
 }
 
 interface CtaDetails {
@@ -15,48 +45,72 @@ interface CtaDetails {
   buySlotUrl: string
 }
 
-const CtaButton: React.FC<{
-  label: string
-  icon: React.ReactNode
-  onClick: (e: React.MouseEvent) => void
-  showLabel: boolean
-}> = ({ label, icon, onClick, showLabel }) => (
-  <motion.div
-    onClick={onClick}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      gap: showLabel ? 6 : 0,
-      padding: showLabel ? "8px 14px" : "8px",
-      borderRadius: 20,
-      background: "rgba(255,255,255,0.9)",
-      backdropFilter: "blur(8px)",
-      color: "#0f172a",
-      fontSize: 13,
-      fontWeight: 600,
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-      cursor: "pointer",
-    }}
-    whileHover={{
-      y: -2,
-      background: "rgba(255,255,255,0.98)",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
-    }}
-    transition={{ type: "spring", stiffness: 400, damping: 15 }}
-  >
-    {showLabel && label}
-    <motion.span
-      style={{ display: "flex", alignItems: "center" }}
-      whileHover={{ x: showLabel ? 2 : 0 }}
-      transition={{ type: "spring", stiffness: 400, damping: 15 }}
-    >
-      {icon}
-    </motion.span>
-  </motion.div>
-)
+const getPositionStyles = (position: CtaPosition): React.CSSProperties => {
+  const baseStyles: React.CSSProperties = {
+    position: "absolute",
+    display: "flex",
+    gap: 8,
+  }
 
-export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClose, width = "100%", height }) => {
+  const positionMap: Record<CtaPosition, React.CSSProperties> = {
+    "bottom-right": { bottom: 12, right: 12 },
+    "bottom-left": { bottom: 12, left: 12 },
+    "top-right": { top: 12, right: 12 },
+    "top-left": { top: 12, left: 12 },
+    "bottom-center": { bottom: 12, left: "50%", transform: "translateX(-50%)" },
+    "top-center": { top: 12, left: "50%", transform: "translateX(-50%)" },
+    "center-left": { top: "50%", left: 12, transform: "translateY(-50%)" },
+    "center-right": { top: "50%", right: 12, transform: "translateY(-50%)" },
+  }
+
+  return { ...baseStyles, ...positionMap[position] }
+}
+
+const CtaButton: React.FC<CtaButtonProps> = ({ label, icon, onClick, showLabel, style = {} }) => {
+  const defaultStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: showLabel ? 6 : 0,
+    padding: showLabel ? "8px 14px" : "8px",
+    borderRadius: 20,
+    background: "rgba(255,255,255,0.9)",
+    backdropFilter: "blur(8px)",
+    color: "#0f172a",
+    fontSize: 13,
+    fontWeight: 600,
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    cursor: "pointer",
+  }
+
+  const mergedStyle = { ...defaultStyle, ...style }
+
+  return (
+    <div onClick={onClick} style={mergedStyle}>
+      {showLabel && label}
+      <span style={{ display: "flex", alignItems: "center" }}>{icon}</span>
+    </div>
+  )
+}
+
+export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
+  castHash,
+  onClose,
+  width = "100%",
+  position = "bottom-right",
+  height,
+  showAdSparkleLabel = false,
+  showCloseButton = false,
+  showBuySlotButton = false,
+  showCtaButton = false,
+  showCtaButtonIcon = false,
+  ctaButtonText = "Learn More",
+  ctaButtonStyle,
+  buySlotButtonStyle,
+  onBuySlotClick,
+  onAdClick,
+  containerStyle: _containerStyle,
+}) => {
   const [ctaDetails, setCtaDetails] = React.useState<CtaDetails | null>(null)
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
@@ -116,12 +170,16 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
   const handleAdClick = () => {
     if (ctaDetails?.url) {
       window.open(ctaDetails.url, "_blank", "noopener,noreferrer")
+      onAdClick?.(ctaDetails.url)
     }
   }
 
   const handleBuySlotClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (ctaDetails?.buySlotUrl) window.open(ctaDetails.buySlotUrl, "_blank", "noopener,noreferrer")
+    if (ctaDetails?.buySlotUrl) {
+      window.open(ctaDetails.buySlotUrl, "_blank", "noopener,noreferrer")
+      onBuySlotClick?.(ctaDetails?.buySlotUrl)
+    }
   }
 
   const handleClose = (e: React.MouseEvent) => {
@@ -136,15 +194,14 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
     ...(height ? { height: typeof height === "number" ? `${height}px` : height } : { aspectRatio: "3 / 2" }),
     borderRadius: 12,
     overflow: "hidden",
+    ..._containerStyle,
   }
 
   if (!visible) return null
 
   if (error) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         style={{
           ...containerStyle,
           display: "flex",
@@ -159,7 +216,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
         }}
       >
         Unable to load ad
-      </motion.div>
+      </div>
     )
   }
 
@@ -172,32 +229,21 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
           background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
         }}
       >
-        <motion.div
+        <div
           style={{
             position: "absolute",
             inset: 0,
             background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)",
           }}
-          animate={{ x: ["-100%", "100%"] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
         />
       </div>
     )
   }
 
   return (
-    <motion.div
-      ref={containerRef}
-      onClick={handleAdClick}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    <div
       style={{
         ...containerStyle,
-        cursor: "pointer",
         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
       }}
     >
@@ -222,96 +268,86 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({ castHash, onClos
 
       <img src={ctaDetails.image} alt="" onLoad={() => setImageLoaded(true)} style={{ display: "none" }} />
 
-      <motion.div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%)",
-        }}
-        whileHover={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)",
-        }}
-        transition={{ duration: 0.3 }}
-      />
-
       {/* Close button */}
-      <motion.div
-        onClick={handleClose}
-        style={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          background: "rgba(0,0,0,0.5)",
-          backdropFilter: "blur(8px)",
-          color: "rgba(255,255,255,0.8)",
-          cursor: "pointer",
-        }}
-        whileHover={{
-          background: "rgba(0,0,0,0.7)",
-          color: "rgba(255,255,255,1)",
-          scale: 1.1,
-        }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400, damping: 15 }}
-      >
-        <X size={14} strokeWidth={2.5} />
-      </motion.div>
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: 12,
-          right: 12,
-          display: "flex",
-          gap: 8,
-        }}
-      >
-        <CtaButton
-          label="Buy Slot"
-          icon={<ShoppingBag size={14} strokeWidth={2.5} />}
-          onClick={handleBuySlotClick}
-          showLabel={!isSmall}
-        />
-        <CtaButton
-          label="Learn More"
-          icon={<ExternalLink size={14} strokeWidth={2.5} />}
-          onClick={(e) => {
-            e.stopPropagation()
-            handleAdClick()
+      {showCloseButton && (
+        <motion.div
+          onClick={handleClose}
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            background: "rgba(0,0,0,0.5)",
+            backdropFilter: "blur(8px)",
+            color: "rgba(255,255,255,0.8)",
+            cursor: "pointer",
           }}
-          showLabel={!isSmall}
-        />
+          whileHover={{
+            background: "rgba(0,0,0,0.7)",
+            color: "rgba(255,255,255,1)",
+            scale: 1.1,
+          }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        >
+          <X size={14} strokeWidth={2.5} />
+        </motion.div>
+      )}
+
+      <div style={getPositionStyles(position)}>
+        {showBuySlotButton && (
+          <CtaButton
+            label="Buy Slot"
+            icon={<ShoppingBag size={14} strokeWidth={2.5} />}
+            onClick={handleBuySlotClick}
+            showLabel={!isSmall}
+            style={buySlotButtonStyle}
+          />
+        )}
+        {showCtaButton && (
+          <CtaButton
+            label={ctaButtonText}
+            icon={showCtaButtonIcon && <ExternalLink size={14} strokeWidth={2.5} />}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleAdClick()
+            }}
+            showLabel={!isSmall}
+            style={ctaButtonStyle}
+          />
+        )}
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          display: "flex",
-          alignItems: "center",
-          gap: 4,
-          padding: "4px 8px",
-          borderRadius: 6,
-          background: "rgba(0,0,0,0.5)",
-          backdropFilter: "blur(8px)",
-          color: "rgba(255,255,255,0.8)",
-          fontSize: 10,
-          fontWeight: 500,
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          letterSpacing: "0.5px",
-          textTransform: "uppercase",
-        }}
-      >
-        <Sparkles size={10} />
-        Ad
-      </div>
-    </motion.div>
+      {showAdSparkleLabel && (
+        <div
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            padding: "4px 8px",
+            borderRadius: 6,
+            background: "rgba(0,0,0,0.5)",
+            backdropFilter: "blur(8px)",
+            color: "rgba(255,255,255,0.8)",
+            fontSize: 10,
+            fontWeight: 500,
+            fontFamily: "system-ui, -apple-system, sans-serif",
+            letterSpacing: "0.5px",
+            textTransform: "uppercase",
+          }}
+        >
+          <Sparkles size={10} />
+          Ad
+        </div>
+      )}
+    </div>
   )
 }
