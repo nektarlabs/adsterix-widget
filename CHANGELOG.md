@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.4.0...v1.4.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* **AdsterixWidget.ts:** fixes displayImage ([ebfdfa0](https://github.com/nektarlabs/adsterix-widget/commit/ebfdfa021c12f96d993db1938ed14217abcb4b36))
+
 # [1.4.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.2...v1.4.0) (2026-01-14)
 
 
