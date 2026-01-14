@@ -139,8 +139,8 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
 
   // Determine if the slot has a buyer
   const hasBuyer = Boolean(ctaDetails?.buyer)
-  // Use default image when no buyer, otherwise use the ad image
-  const displayImage = hasBuyer ? ctaDetails?.image : defaultImage
+  // if has buyer, use ad image; else use defaultImage if provided, else use ad image
+  const displayImage = hasBuyer ? ctaDetails?.image : defaultImage ? defaultImage : ctaDetails?.image
 
   // Reset imageLoaded when the display image changes
   React.useEffect(() => {
