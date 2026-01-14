@@ -1,6 +1,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ExternalLink, Sparkles, ShoppingBag, X } from "lucide-react"
+import useCtaDetails, { CtaDetails } from "./hooks/useCtaDetails"
 
 type CtaPosition =
   | "bottom-left"
@@ -13,21 +14,43 @@ type CtaPosition =
   | "center-right"
 
 export interface AdsterixWidgetProps {
-  castHash?: string
+  /** The Farcaster cast hash to fetch ad details for (required) */
+  castHash: string
+  /** Callback fired when the widget is closed via the close button */
   onClose?: () => void
+  /** Width of the widget container (number = px, string = any CSS value). Default: "100%" */
   width?: string | number
+  /** Height of the widget container (number = px, string = any CSS value). If omitted, uses 3:2 aspect ratio */
   height?: string | number
+  /** Default image URL to display when no buyer has purchased the ad slot */
+  defaultImage?: string
+  /** Show a small "Ad" label with sparkle icon in the top-left corner */
   showAdSparkleLabel?: boolean
+  /** Show a close button in the top-right corner */
   showCloseButton?: boolean
+  /** Show the "Buy Slot" button (allows users to purchase the ad slot) */
   showBuySlotButton?: boolean
+  /** Show the default CTA button */
   showCtaButton?: boolean
+  /** Show an external link icon inside the CTA button */
   showCtaButtonIcon?: boolean
+  /** Text label for the CTA button. Default: "Learn More" */
   ctaButtonText?: string
+  /** If provided, these nodes will be rendered instead of the default CTA / Buy Slot buttons */
+  ctaNodes?: React.ReactNode[]
+  /** Called when a custom CTA node is clicked: (index, event, ctaDetails) */
+  onCtaNodeClick?: (index: number, e: React.MouseEvent, ctaDetails: CtaDetails | null) => void
+  /** Callback fired when the "Buy Slot" button is clicked, receives the buySlotUrl */
   onBuySlotClick?: (buySlotUrl: string) => void
+  /** Callback fired when the ad (or CTA button) is clicked, receives the destination url */
   onAdClick?: (url: string) => void
+  /** Position of the CTA buttons within the widget. Default: "bottom-right" */
   position?: CtaPosition
+  /** Custom styles to merge into the widget container */
   containerStyle?: React.CSSProperties
+  /** Custom styles to merge into the "Buy Slot" button */
   buySlotButtonStyle?: React.CSSProperties
+  /** Custom styles to merge into the CTA button */
   ctaButtonStyle?: React.CSSProperties
 }
 
@@ -37,12 +60,6 @@ interface CtaButtonProps {
   onClick: (e: React.MouseEvent) => void
   showLabel: boolean
   style?: React.CSSProperties
-}
-
-interface CtaDetails {
-  image: string
-  url: string
-  buySlotUrl: string
 }
 
 const getPositionStyles = (position: CtaPosition): React.CSSProperties => {
@@ -99,6 +116,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   width = "100%",
   position = "bottom-right",
   height,
+  defaultImage,
   showAdSparkleLabel = false,
   showCloseButton = false,
   showBuySlotButton = false,
@@ -109,41 +127,25 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   buySlotButtonStyle,
   onBuySlotClick,
   onAdClick,
+  onCtaNodeClick,
   containerStyle: _containerStyle,
+  ctaNodes,
 }) => {
-  const [ctaDetails, setCtaDetails] = React.useState<CtaDetails | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
-  const [loading, setLoading] = React.useState(false)
+  const { ctaDetails, loading, error } = useCtaDetails({ castHash })
   const [imageLoaded, setImageLoaded] = React.useState(false)
   const [visible, setVisible] = React.useState(true)
   const [isSmall, setIsSmall] = React.useState(true) // Start with true to avoid flash
   const containerRef = React.useRef<HTMLDivElement>(null)
 
+  // Determine if the slot has a buyer
+  const hasBuyer = Boolean(ctaDetails?.buyer)
+  // Use default image when no buyer, otherwise use the ad image
+  const displayImage = hasBuyer ? ctaDetails?.image : defaultImage
+
+  // Reset imageLoaded when the display image changes
   React.useEffect(() => {
-    if (!castHash) return
-
-    const fetchCtaDetails = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const response = await fetch(`https://www.adsterix.xyz/api/ads/cta-details/${castHash}`)
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status}`)
-        }
-
-        const data = await response.json()
-        setCtaDetails(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCtaDetails()
-  }, [castHash])
+    setImageLoaded(false)
+  }, [displayImage])
 
   React.useEffect(() => {
     if (!containerRef.current) return
@@ -245,13 +247,14 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
       style={{
         ...containerStyle,
         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+        cursor: "pointer",
       }}
     >
       <AnimatePresence>
-        {imageLoaded && (
+        {imageLoaded && displayImage && (
           <motion.img
-            src={ctaDetails.image}
-            alt="Advertisement"
+            src={displayImage}
+            alt={hasBuyer ? "Advertisement" : "Default placeholder"}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
@@ -266,7 +269,9 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
         )}
       </AnimatePresence>
 
-      <img src={ctaDetails.image} alt="" onLoad={() => setImageLoaded(true)} style={{ display: "none" }} />
+      {displayImage && (
+        <img src={displayImage} alt="" onLoad={() => setImageLoaded(true)} style={{ display: "none" }} />
+      )}
 
       {/* Close button */}
       {showCloseButton && (
@@ -300,26 +305,46 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
       )}
 
       <div style={getPositionStyles(position)}>
-        {showBuySlotButton && (
-          <CtaButton
-            label="Buy Slot"
-            icon={<ShoppingBag size={14} strokeWidth={2.5} />}
-            onClick={handleBuySlotClick}
-            showLabel={!isSmall}
-            style={buySlotButtonStyle}
-          />
-        )}
-        {showCtaButton && (
-          <CtaButton
-            label={ctaButtonText}
-            icon={showCtaButtonIcon && <ExternalLink size={14} strokeWidth={2.5} />}
-            onClick={(e) => {
-              e.stopPropagation()
-              handleAdClick()
-            }}
-            showLabel={!isSmall}
-            style={ctaButtonStyle}
-          />
+        {ctaNodes && ctaNodes.length > 0 ? (
+          // Render custom nodes provided by the consumer. Each node is wrapped to
+          // keep spacing consistent with the default layout and to avoid
+          // accidental propagation of clicks to the ad container.
+          ctaNodes.map((node, idx) => (
+            <div
+              key={idx}
+              style={{ display: "flex", alignItems: "center" }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onCtaNodeClick?.(idx, e, ctaDetails)
+              }}
+            >
+              {node}
+            </div>
+          ))
+        ) : (
+          <>
+            {showBuySlotButton && (
+              <CtaButton
+                label="Buy Slot"
+                icon={<ShoppingBag size={14} strokeWidth={2.5} />}
+                onClick={handleBuySlotClick}
+                showLabel={!isSmall}
+                style={buySlotButtonStyle}
+              />
+            )}
+            {showCtaButton && (
+              <CtaButton
+                label={ctaButtonText}
+                icon={showCtaButtonIcon && <ExternalLink size={14} strokeWidth={2.5} />}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleAdClick()
+                }}
+                showLabel={!isSmall}
+                style={ctaButtonStyle}
+              />
+            )}
+          </>
         )}
       </div>
 
