@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.2...v1.4.0) (2026-01-14)
+
+
+### Features
+
+* adds ctaNodes and useCtaDetails ([6535dcc](https://github.com/nektarlabs/adsterix-widget/commit/6535dcccf5610bc8a3859a1b22faca3d17425801))
+* adds defaultImage to display when no buyer has purchased the ad slot ([bb4d081](https://github.com/nektarlabs/adsterix-widget/commit/bb4d081f446306aae6adce0ef2d1176ced631311))
+
 ## [1.3.2](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.1...v1.3.2) (2025-12-30)
 
 
