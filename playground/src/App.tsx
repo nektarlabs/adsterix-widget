@@ -83,6 +83,70 @@ export function App() {
           console.log("CTA node clicked:", { index, event: e, ctaDetails: details })
         }}
       />
+
+      <h2 style={{ marginTop: 32 }}>With Default Image (No Buyer)</h2>
+      <AdsterixWidget
+        castHash="0xbf59074b94c5fd1c6b3ee1a7201708da3f60998f"
+        width={500}
+        height={100}
+        defaultImage="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg"
+        position="center-right"
+        containerStyle={{
+          borderRadius: 12,
+          border: "3px solid #f97316",
+        }}
+        ctaNodes={[
+          <button
+            key="buy"
+            style={{
+              padding: "12px 24px",
+              borderRadius: 8,
+              border: "none",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: 16,
+              cursor: "pointer",
+            }}
+          >
+            Buy Slot
+          </button>,
+          <button
+            key="info"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              border: "none",
+              background: "#9ca3af",
+              color: "#fff",
+              cursor: "pointer",
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: "Georgia, serif",
+              fontStyle: "italic",
+            }}
+            title="Info"
+          >
+            i
+          </button>,
+        ]}
+        onCtaNodeClick={(index, _e, details) => {
+          if (index === 0) {
+            // Buy Slot clicked
+            if (details?.buySlotUrl) {
+              window.open(details.buySlotUrl, "_blank", "noopener,noreferrer")
+            }
+            console.log("Buy slot clicked:", details?.buySlotUrl)
+          } else if (index === 1) {
+            // Info clicked
+            console.log("Info clicked:", details)
+          }
+        }}
+      />
     </div>
   )
 }

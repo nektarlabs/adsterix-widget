@@ -22,6 +22,8 @@ export interface AdsterixWidgetProps {
   width?: string | number
   /** Height of the widget container (number = px, string = any CSS value). If omitted, uses 3:2 aspect ratio */
   height?: string | number
+  /** Default image URL to display when no buyer has purchased the ad slot */
+  defaultImage?: string
   /** Show a small "Ad" label with sparkle icon in the top-left corner */
   showAdSparkleLabel?: boolean
   /** Show a close button in the top-right corner */
@@ -114,6 +116,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   width = "100%",
   position = "bottom-right",
   height,
+  defaultImage,
   showAdSparkleLabel = false,
   showCloseButton = false,
   showBuySlotButton = false,
@@ -133,6 +136,16 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   const [visible, setVisible] = React.useState(true)
   const [isSmall, setIsSmall] = React.useState(true) // Start with true to avoid flash
   const containerRef = React.useRef<HTMLDivElement>(null)
+
+  // Determine if the slot has a buyer
+  const hasBuyer = Boolean(ctaDetails?.buyer)
+  // Use default image when no buyer, otherwise use the ad image
+  const displayImage = hasBuyer ? ctaDetails?.image : defaultImage
+
+  // Reset imageLoaded when the display image changes
+  React.useEffect(() => {
+    setImageLoaded(false)
+  }, [displayImage])
 
   React.useEffect(() => {
     if (!containerRef.current) return
@@ -234,13 +247,14 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
       style={{
         ...containerStyle,
         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+        cursor: "pointer",
       }}
     >
       <AnimatePresence>
-        {imageLoaded && (
+        {imageLoaded && displayImage && (
           <motion.img
-            src={ctaDetails.image}
-            alt="Advertisement"
+            src={displayImage}
+            alt={hasBuyer ? "Advertisement" : "Default placeholder"}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
@@ -255,7 +269,9 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
         )}
       </AnimatePresence>
 
-      <img src={ctaDetails.image} alt="" onLoad={() => setImageLoaded(true)} style={{ display: "none" }} />
+      {displayImage && (
+        <img src={displayImage} alt="" onLoad={() => setImageLoaded(true)} style={{ display: "none" }} />
+      )}
 
       {/* Close button */}
       {showCloseButton && (
