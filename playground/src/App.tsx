@@ -14,7 +14,8 @@ export function App() {
         showCtaButton
         ctaButtonText="Open"
         position="center-right"
-        onAdClick={() => console.log("onAdClick")}
+        onCtaButtonClick={() => console.log("onCtaButtonClick")}
+        onAdClick={(details) => console.log("onAdClick", details)}
         containerStyle={{
           borderRadius: 0,
         }}
@@ -31,6 +32,7 @@ export function App() {
         width={400}
         height={120}
         position="center-right"
+        onAdClick={(details) => console.log("onAdClick", details)}
         ctaNodes={[
           <button
             key="cta"
@@ -91,6 +93,7 @@ export function App() {
         height={100}
         defaultImage="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg"
         position="center-right"
+        onAdClick={(details) => console.log("onAdClick", details)}
         containerStyle={{
           borderRadius: 12,
           border: "3px solid #f97316",

@@ -42,8 +42,10 @@ export interface AdsterixWidgetProps {
   onCtaNodeClick?: (index: number, e: React.MouseEvent, ctaDetails: CtaDetails | null) => void
   /** Callback fired when the "Buy Slot" button is clicked, receives the buySlotUrl */
   onBuySlotClick?: (buySlotUrl: string) => void
-  /** Callback fired when the ad (or CTA button) is clicked, receives the destination url */
-  onAdClick?: (url: string) => void
+  /** Callback fired when the CTA (call-to-action) button is clicked, receives the ctaDetails */
+  onCtaButtonClick?: (ctaDetails: CtaDetails) => void
+  /** Callback fired when the entire ad is clicked, receives the ctaDetails */
+  onAdClick?: (ctaDetails: CtaDetails) => void
   /** Position of the CTA buttons within the widget. Default: "bottom-right" */
   position?: CtaPosition
   /** Custom styles to merge into the widget container */
@@ -126,6 +128,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   ctaButtonStyle,
   buySlotButtonStyle,
   onBuySlotClick,
+  onCtaButtonClick,
   onAdClick,
   onCtaNodeClick,
   containerStyle: _containerStyle,
@@ -170,9 +173,15 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
   }, [loading, ctaDetails]) // Re-run when content changes
 
   const handleAdClick = () => {
+    if (ctaDetails) {
+      onAdClick?.(ctaDetails)
+    }
+  }
+
+  const handleCtaButtonClick = () => {
     if (ctaDetails?.url) {
       window.open(ctaDetails.url, "_blank", "noopener,noreferrer")
-      onAdClick?.(ctaDetails.url)
+      onCtaButtonClick?.(ctaDetails)
     }
   }
 
@@ -244,6 +253,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
 
   return (
     <div
+      onClick={handleAdClick}
       style={{
         ...containerStyle,
         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
@@ -338,7 +348,7 @@ export const AdsterixWidget: React.FC<AdsterixWidgetProps> = ({
                 icon={showCtaButtonIcon && <ExternalLink size={14} strokeWidth={2.5} />}
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleAdClick()
+                  handleCtaButtonClick()
                 }}
                 showLabel={!isSmall}
                 style={ctaButtonStyle}
