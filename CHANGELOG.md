@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.4.1...v1.5.0) (2026-01-20)
+
+
+### Features
+
+* adds onCtaButtonClick and makes onAdClick triggered when the entire ad is clicked ([0779f11](https://github.com/nektarlabs/adsterix-widget/commit/0779f11b422ca99eb10c5c805bd98012b59470a1))
+* adds tests ([dcd16cb](https://github.com/nektarlabs/adsterix-widget/commit/dcd16cbff886faa8835387d25b3048cd56369f77))
+
 ## [1.4.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.4.0...v1.4.1) (2026-01-14)
 
 ### Bug Fixes
