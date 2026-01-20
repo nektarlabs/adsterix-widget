@@ -23,6 +23,9 @@
     "clean": "rm -rf dist",
     "dev": "tsup --watch",
     "format": "prettier --config ./.prettierrc --write \"./**/*.{ts,tsx,json,md}\"",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "semantic-release": "semantic-release"
   },
   "peerDependencies": {
@@ -32,11 +35,16 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "jsdom": "^24.0.0",
     "semantic-release": "^25.0.2",
     "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
   },
   "dependencies": {
     "framer-motion": "^12.23.24",
