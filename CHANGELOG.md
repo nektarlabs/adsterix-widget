@@ -1,38 +1,39 @@
 ## [1.4.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.4.0...v1.4.1) (2026-01-14)
 
-
 ### Bug Fixes
 
-* **AdsterixWidget.ts:** fixes displayImage ([ebfdfa0](https://github.com/nektarlabs/adsterix-widget/commit/ebfdfa021c12f96d993db1938ed14217abcb4b36))
+- **AdsterixWidget.ts:** fixes displayImage
+  ([ebfdfa0](https://github.com/nektarlabs/adsterix-widget/commit/ebfdfa021c12f96d993db1938ed14217abcb4b36))
 
 # [1.4.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.2...v1.4.0) (2026-01-14)
 
-
 ### Features
 
-* adds ctaNodes and useCtaDetails ([6535dcc](https://github.com/nektarlabs/adsterix-widget/commit/6535dcccf5610bc8a3859a1b22faca3d17425801))
-* adds defaultImage to display when no buyer has purchased the ad slot ([bb4d081](https://github.com/nektarlabs/adsterix-widget/commit/bb4d081f446306aae6adce0ef2d1176ced631311))
+- adds ctaNodes and useCtaDetails
+  ([6535dcc](https://github.com/nektarlabs/adsterix-widget/commit/6535dcccf5610bc8a3859a1b22faca3d17425801))
+- adds defaultImage to display when no buyer has purchased the ad slot
+  ([bb4d081](https://github.com/nektarlabs/adsterix-widget/commit/bb4d081f446306aae6adce0ef2d1176ced631311))
 
 ## [1.3.2](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.1...v1.3.2) (2025-12-30)
 
-
 ### Bug Fixes
 
-* update npm token configuration ([4d6bc1d](https://github.com/nektarlabs/adsterix-widget/commit/4d6bc1da48367fd97dac19beff91ffcd0541eac3))
+- update npm token configuration
+  ([4d6bc1d](https://github.com/nektarlabs/adsterix-widget/commit/4d6bc1da48367fd97dac19beff91ffcd0541eac3))
 
 ## [1.3.1](https://github.com/nektarlabs/adsterix-widget/compare/v1.3.0...v1.3.1) (2025-12-30)
 
-
 ### Bug Fixes
 
-* forces new release ([5ff332e](https://github.com/nektarlabs/adsterix-widget/commit/5ff332ede5e2ae5d995affc9187b7c935594e116))
+- forces new release
+  ([5ff332e](https://github.com/nektarlabs/adsterix-widget/commit/5ff332ede5e2ae5d995affc9187b7c935594e116))
 
 # [1.3.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.2.0...v1.3.0) (2025-12-30)
 
-
 ### Features
 
-* forces new release ([00d8bce](https://github.com/nektarlabs/adsterix-widget/commit/00d8bce6a28b37e208b32bf77ed79c44a22873a2))
+- forces new release
+  ([00d8bce](https://github.com/nektarlabs/adsterix-widget/commit/00d8bce6a28b37e208b32bf77ed79c44a22873a2))
 
 # [1.2.0](https://github.com/nektarlabs/adsterix-widget/compare/v1.1.0...v1.2.0) (2025-12-30)
 
